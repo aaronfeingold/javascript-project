@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", callOnLoad)
 function callOnLoad() {
   loadWines();
   revealWineFormButton().addEventListener('click', revealForm);
-  form().addEventListener('submit', createWine);
+  form().addEventListener('submit', Wine.createFromForm);
 };
 
 function loadWines() {
@@ -24,8 +24,12 @@ function loadWines() {
       }
       return resp.json()
     })
-    .then(data => displayWines(data))
+    .then(winesData => {
+      Wine.createWines(winesData)
+      Wine.displayWines();
+    })
 }
+/*
 
 function displayWines(wines) {
   wines.forEach(wine => displayWine(wine))
@@ -39,7 +43,8 @@ function displayWine(wine) {
   const i = document.createElement('i')
   
   const deleteButton = document.createElement('button');
-  deleteButton.innerText = "Delete Wine"
+  deleteButton.innerText = "Delete Wine";
+  deleteButton.id = this.id;
   deleteButton.addEventListener('click', deleteWine)
 
   h4.innerText = wine.name;
@@ -69,7 +74,7 @@ function displayWine(wine) {
   wineList().appendChild(div1);
 
 }
-/* 
+ 
   <div class="row">
     <div class="col s4">
     <h4>Wine Name</h4>
@@ -77,6 +82,8 @@ function displayWine(wine) {
     <i class="material-icons">mood</i>
     </div>
   </div>
+
+
 */
 
 function revealForm() {
@@ -90,6 +97,7 @@ function revealForm() {
   }
 }
 
+/*
 function createWine(e) {
   e.preventDefault();
 
@@ -104,10 +112,14 @@ function createWine(e) {
   resetInputs();
   form().classList.add("hidden")
 }
+*/
 
+/*
 function deleteWine(){
   this.parentNode.parentNode.remove()
 }
+
+*/
 
 function resetInputs() {
   wineName().value = "";
