@@ -1,5 +1,6 @@
 const baseUrl = 'http://localhost:3000'
 
+const revealWineFormButton = () => document.getElementById('form-reveal-button')
 const wineList = () => document.getElementById('wine-list')
 const form = () => document.getElementById('wine-maker-form')
 const wineName = () => document.querySelector('input#wine-name')
@@ -11,7 +12,8 @@ document.addEventListener("DOMContentLoaded", callOnLoad)
 
 function callOnLoad() {
   loadWines();
-  form().addEventListener('submit', createWine)
+  revealWineFormButton().addEventListener('click', revealForm);
+  form().addEventListener('submit', createWine);
 };
 
 function loadWines() {
@@ -30,28 +32,62 @@ function displayWines(wines) {
 }
 
 function displayWine(wine) {
-  const div = document.createElement('div');
+  const div1 = document.createElement('div');
+  const div2 = document.createElement('div');
   const h4 = document.createElement('h4');
   const p = document.createElement('p');
+  const i = document.createElement('i')
+  
   const deleteButton = document.createElement('button');
-  const editButton = document.createElement('button');
+  deleteButton.innerText = "Delete Wine"
+  deleteButton.addEventListener('click', deleteWine)
 
   h4.innerText = wine.name;
   p.innerText = `vintage: ${wine.vintage}`;
 
-  div.appendChild(h4);
-  div.appendChild(p);
+  i.setAttribute('class', 'material-icons')
+  i.setAttribute('id', 'unliked')
+  i.innerText = "mood"
+  i.addEventListener('click', event => {
+    if (event.target.id === 'unliked')
+      i.setAttribute('id', 'liked')  
+    else
+      i.setAttribute('id', 'unliked') 
+  });
 
-  wineList().appendChild(div);
+  div2.setAttribute('class', 'col s4');
+  div2.setAttribute('id', 'card');
+  div2.appendChild(h4);
+  div2.appendChild(p);
+  div2.appendChild(i);
+  div2.appendChild(deleteButton);
+  
 
+  div1.setAttribute('class', 'row');
+  div1.appendChild(div2);
+
+  wineList().appendChild(div1);
+
+}
 /* 
   <div class="row">
     <div class="col s4">
     <h4>Wine Name</h4>
     <p>vintage</p>
+    <i class="material-icons">mood</i>
     </div>
   </div>
 */
+
+function revealForm() {
+  if (revealWineFormButton().innerText === "ADD NEW WINE") {
+    form().classList.remove("hidden");
+    revealWineFormButton().innerText = "Or Dont";
+  }
+  else {
+    form().classList.add("hidden")
+    revealWineFormButton().innerText = "ADD NEW WINE"
+  }
 }
 
 function createWine(e) {
@@ -66,6 +102,11 @@ function createWine(e) {
   displayWine(wine)
 
   resetInputs();
+  form().classList.add("hidden")
+}
+
+function deleteWine(){
+  this.parentNode.parentNode.remove()
 }
 
 function resetInputs() {

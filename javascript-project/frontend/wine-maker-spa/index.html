@@ -10,31 +10,30 @@
     integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 
   <!-- Compiled and minified JavaScript -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="javascripts/index.js"></script>
+  <link rel="stylesheet" href="stylesheets/styles.css">
   <title>Winemakers Making Wine</title>
 </head>
 <body>
 <!-- Nav Bar Here-->
-  <div class="navbar-fixed">
-    <nav>
-      <div class="nav-wrapper">
-        <a href="#!" class="brand-logo">myWineCellar</a>
-        <ul class="right hide-on-med-and-down">
-          <li><a href="sass.html">Sass</a></li>
-          <li><a href="badges.html">Components</a></li>
-        </ul>
-      </div>
-    </nav>
-  </div>
+<header>
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo"></a>
+      <ul id="nav-mobile" class="right">
+        <li><button id="form-reveal-button">ADD NEW WINE</button></li>
+      </ul>
+    </div>
+  </nav>
+</header>
 
 
   <!--Form for new Wine Here-->
   <div class="container">
-      <div>
-        <h3>This is a cellar organizing app</h3>
-      </div>
-   <form id="wine-maker-form">
+   <form id="wine-maker-form" class="hidden">
      <div class="input-field">
        <input type="text" name="wine-name" id="wine-name">
        <label for="wine-name">Wine Name</label>
@@ -45,12 +44,18 @@
     </div>
     <input type="submit" value="Create Wine" class="btn">
    </form>
-  
+  <br>
 
     <!--Wines displayed here-->
+  <header>
+    <h2>Wine List</h2>
+  </header>
+  <br>
+  <br>
+    <main id="wine-list">
 
-    <h3>Wine List</h3>
-    <div id="wine-list"></div>
+    </main>
+
   </div>
 </body>
 </html>
