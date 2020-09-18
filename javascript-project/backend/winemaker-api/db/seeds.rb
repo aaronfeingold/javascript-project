@@ -10,6 +10,7 @@
 # wine = Wine.create(name: "Twomey", vintage: 2011)
 # wine = Wine.create(name: "Voyager", vintage: 2012)
 
-# varietal = Varietal.create(name: "Cabernet Sauvignon", wine_id: 1)
-# varietal = Varietal.create(name: "Pinot Noir", wine_id: 2)
-# varietal = Varietal.create(name: "Chardonnay", wine_id: 3)
+# varietal = Varietal.create(name: "Cabernet Sauvignon")
+# varietal = Varietal.create(name: "Pinot Noir")
+# varietal = Varietal.create(name: "Chardonnay")
+# varietal = Varietal.create(name: "Pinot Grigio")

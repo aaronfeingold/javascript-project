@@ -14,22 +14,25 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="javascripts/models/wine.js"></script>
+  <script src="javascripts/models/varietal.js"></script>
   <script src="javascripts/index.js"></script>
   <link rel="stylesheet" href="stylesheets/styles.css">
   <title>Winemakers Making Wine</title>
 </head>
 <body>
 <!-- Nav Bar Here-->
-<header>
+
   <nav>
     <div class="nav-wrapper">
-      <a href="#" class="brand-logo"></a>
+      <ul id="nav-mobile" class="left">
+      Organize Your Cellar
+      </ul>
       <ul id="nav-mobile" class="right">
-        <li><button id="form-reveal-button">ADD NEW WINE</button></li>
+        <li><button id="form-reveal-button" class="btn" >ADD NEW WINE</button></li>
       </ul>
     </div>
   </nav>
-</header>
+
 
 
   <!--Form for new Wine Here-->
@@ -43,6 +46,17 @@
       <input type="text" name="wine-vintage" id="wine-vintage" >
       <label for="wine-vintage">Vintage</label>
     </div>
+    <div class="input-field col s12" id="varietal-selector">
+      <select multiple>
+        <option value="" disabled selected></option>
+        <option value="1">Cabernet Sauvignon</option>
+        <option value="2">Pinot Noir</option>
+        <option value="3">Chardonnay</option>
+        <option value="3">Pinot Grigio</option>
+      </select>
+      <label>Select Varietals</label>
+    </div>
+    <br>
     <input type="submit" value="Create Wine" class="btn">
    </form>
   <br>
@@ -58,5 +72,10 @@
     </main>
 
   </div>
+  <script>
+    $(document).ready(function(){
+      $('select').formSelect();
+    });
+  </script>
 </body>
 </html>
