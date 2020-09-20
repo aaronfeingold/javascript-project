@@ -46,6 +46,6 @@ class VarietalsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def varietal_params
-      params.require(:varietal).permit(:name, :wine_id, varietal: {})
+      params.require(:varietal).permit(:name, :wine_id)
     end
 end

@@ -5,12 +5,12 @@ class WinesController < ApplicationController
   def index
     @wines = Wine.all
 
-    render json: @wines
+    render json: @wines 
   end
 
   # GET /wines/1
   def show
-    render json: @wine
+    render json: {id: @wine.id, name: @wine.name, varietals: @wine.varietals }
   end
 
   # POST /wines
@@ -46,6 +46,6 @@ class WinesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def wine_params
-      params.require(:wine).permit(:name, :vintage)
+      params.require(:wine).permit(:name, :vintage, varietal_ids: {})
     end
 end

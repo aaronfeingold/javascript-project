@@ -5,15 +5,15 @@ const wineList = () => document.getElementById('wine-list')
 const form = () => document.getElementById('wine-maker-form')
 const wineName = () => document.querySelector('input#wine-name')
 const wineVintage = () => document.querySelector('input#wine-vintage')
-const wineVarietalSelector = () => document.querySelector('select')
+const varietalDropDown = () => document.querySelector('select')
 
 const wines = []
+
 
 document.addEventListener("DOMContentLoaded", callOnLoad)
 
 function callOnLoad() {
-  loadWines();
-  // loadVarietals();
+  loadWines(); 
   revealWineFormButton().addEventListener('click', revealForm);
   form().addEventListener('submit', Wine.createFromForm);
 };
@@ -31,23 +31,8 @@ function loadWines() {
       Wine.displayWines();
     })
 }
-
-// function loadVarietals() {
-//   fetch(baseUrl + '/varietals')
-//     .then(resp => {
-//       if (resp.status !== 200) {
-//         throw new Error(resp.statusText);
-//       }
-//       return resp.json()
-//     })
-//     .then(varietalsData => {
-//       Varietal.createVarietals(varietalsData)
-//       Varietal.displayVarietals();
-//     })
-// }
-
-
 function revealForm() {
+  loadVarietals();
   if (revealWineFormButton().innerText === "ADD NEW WINE") {
     form().classList.remove("hidden");
     revealWineFormButton().innerText = "Or Dont";
@@ -57,6 +42,22 @@ function revealForm() {
     revealWineFormButton().innerText = "ADD NEW WINE"
   }
 }
+
+function loadVarietals() {
+  fetch(baseUrl + '/varietals')
+    .then(resp => {
+      if (resp.status !== 200) {
+        throw new Error(resp.statusText);
+      }
+      return resp.json()
+    })
+    .then(varietalsData => {
+      Varietal.createVarietals(varietalsData)
+      Varietal.displayVarietals();
+    })
+}
+
+
 
 
 function resetInputs() {
