@@ -1,3 +1,5 @@
+// const { Dropdown } = require("materialize-css")
+
 const baseUrl = 'http://localhost:3000'
 
 const revealWineFormButton = () => document.getElementById('form-reveal-button')
@@ -5,7 +7,15 @@ const wineList = () => document.getElementById('wine-list')
 const form = () => document.getElementById('wine-maker-form')
 const wineName = () => document.querySelector('input#wine-name')
 const wineVintage = () => document.querySelector('input#wine-vintage')
-const varietalDropDown = () => document.querySelector('select')
+const varietalDropDown = () => document.getElementById('varietal-selector')
+// varietalDropDown.length = 0;
+
+// let defaultOption = document.createElement('option');
+// defaultOption.text = 'Choose Varietals'
+
+// varietalDropDown().add(defaultOption)
+// varietalDropDown.selectedIndex = 0;
+
 
 const wines = []
 
@@ -13,7 +23,8 @@ const wines = []
 document.addEventListener("DOMContentLoaded", callOnLoad)
 
 function callOnLoad() {
-  loadWines(); 
+  loadWines();
+  // loadVarietals();
   revealWineFormButton().addEventListener('click', revealForm);
   form().addEventListener('submit', Wine.createFromForm);
 };
@@ -27,12 +38,12 @@ function loadWines() {
       return resp.json()
     })
     .then(winesData => {
+      debugger;
       Wine.createWines(winesData)
       Wine.displayWines();
     })
 }
 function revealForm() {
-  loadVarietals();
   if (revealWineFormButton().innerText === "ADD NEW WINE") {
     form().classList.remove("hidden");
     revealWineFormButton().innerText = "Or Dont";
@@ -56,8 +67,6 @@ function loadVarietals() {
       Varietal.displayVarietals();
     })
 }
-
-
 
 
 function resetInputs() {

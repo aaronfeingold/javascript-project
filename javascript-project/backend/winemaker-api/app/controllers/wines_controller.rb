@@ -5,7 +5,7 @@ class WinesController < ApplicationController
   def index
     @wines = Wine.all
 
-    render json: @wines 
+    render json: @wines, :include => {:varietals => {:except => [:created_at, :updated_at]}}, :except => [:updated_at]
   end
 
   # GET /wines/1
@@ -46,6 +46,6 @@ class WinesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def wine_params
-      params.require(:wine).permit(:name, :vintage, varietal_ids: {})
+      params.fetch(:wine, {}).permit(:name, :vintage, varietals_attributes: [:name])
     end
 end

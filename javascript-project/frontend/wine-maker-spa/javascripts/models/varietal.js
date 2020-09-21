@@ -8,8 +8,8 @@ class Varietal {
       this.wine_id = wine_id;
     }
 
-addVarietalsToVarietalDropDown() {
-  const varietalOption = document.createElement('option')
+addToVarietalDropDown() {
+  let varietalOption = document.createElement('option')
   varietalOption.setAttribute('value', `${this.id}`)
   varietalOption.innerText = this.name
   varietalDropDown().appendChild(varietalOption)
@@ -28,8 +28,7 @@ static createVarietals(varietalsData){
 }
 
 static displayVarietals(){
-  wineList().innerHTML = '';
-  Varietal.all.forEach(varietal => varietal.addVarietalsToVarietalDropDown())
+  Varietal.all.forEach(varietal => varietal.addToVarietalDropDown())
 }
 
 }
