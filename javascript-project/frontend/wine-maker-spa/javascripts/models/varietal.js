@@ -11,6 +11,7 @@ class Varietal {
 addToVarietalDropDown() {
   let varietalOption = document.createElement('option')
   varietalOption.setAttribute('value', `${this.id}`)
+  varietalOption.setAttribute('id', `${this.name}`)
   varietalOption.innerText = this.name
   varietalDropDown().appendChild(varietalOption)
 }

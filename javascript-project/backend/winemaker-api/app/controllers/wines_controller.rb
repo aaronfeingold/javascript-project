@@ -5,18 +5,25 @@ class WinesController < ApplicationController
   def index
     @wines = Wine.all
 
-    render json: @wines, :include => {:varietals => {:except => [:created_at, :updated_at]}}, :except => [:updated_at]
+    render json: @wines
+
+    # , :include => {:varietals => {:except => [:created_at, :updated_at]}}, :except => [:updated_at]
+
   end
 
   # GET /wines/1
   def show
-    render json: {id: @wine.id, name: @wine.name, varietals: @wine.varietals }
+    render json: @wine
   end
 
   # POST /wines
   def create
+    binding.pry
     @wine = Wine.new(wine_params)
-
+    # WineVarietal.create(wine_id: @wine.id, varietals_ids: wine_params[:varietals_ids] )
+    # @wine.varietals << Varietal.find(wine_params[:varietals_attributes][])
+    # @wine.varietals.push(wine_params[:varietals_ids][])
+    
     if @wine.save
       render json: @wine, status: :created, location: @wine
     else
@@ -36,6 +43,7 @@ class WinesController < ApplicationController
   # DELETE /wines/1
   def destroy
     @wine.destroy
+    render body: nil, status: :no_content
   end
 
   private
@@ -46,6 +54,6 @@ class WinesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def wine_params
-      params.fetch(:wine, {}).permit(:name, :vintage, varietals_attributes: [:name])
+      params.require(:wine).permit(:name, :vintage, varietal_ids: [])
     end
 end

@@ -7,7 +7,7 @@ const wineList = () => document.getElementById('wine-list')
 const form = () => document.getElementById('wine-maker-form')
 const wineName = () => document.querySelector('input#wine-name')
 const wineVintage = () => document.querySelector('input#wine-vintage')
-const varietalDropDown = () => document.getElementById('varietal-selector')
+const varietalDropDown = () => document.querySelector('select#varietal-selector')
 // varietalDropDown.length = 0;
 
 // let defaultOption = document.createElement('option');
@@ -15,7 +15,10 @@ const varietalDropDown = () => document.getElementById('varietal-selector')
 
 // varietalDropDown().add(defaultOption)
 // varietalDropDown.selectedIndex = 0;
-
+// document.addEventListener('DOMContentLoaded', function() {
+//   let elems = document.querySelectorAll('select');
+//   let instances = M.FormSelect.init(elems, options);
+// });
 
 const wines = []
 
@@ -24,8 +27,8 @@ document.addEventListener("DOMContentLoaded", callOnLoad)
 
 function callOnLoad() {
   loadWines();
-  // loadVarietals();
-  revealWineFormButton().addEventListener('click', revealForm);
+  loadVarietals();
+  // revealWineFormButton().addEventListener('click', revealForm);
   form().addEventListener('submit', Wine.createFromForm);
 };
 
@@ -38,7 +41,7 @@ function loadWines() {
       return resp.json()
     })
     .then(winesData => {
-      debugger;
+      
       Wine.createWines(winesData)
       Wine.displayWines();
     })
@@ -72,4 +75,6 @@ function loadVarietals() {
 function resetInputs() {
   wineName().value = "";
   wineVintage().value = "";
+  document.getElementById('varietal-selector').value = "";
 }
+

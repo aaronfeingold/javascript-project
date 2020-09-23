@@ -1,3 +1,4 @@
 class Varietal < ApplicationRecord
-  belongs_to :wine
+  has_many :wine_varietals
+  has_many :wines, through: :wine_varietals
 end
