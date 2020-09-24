@@ -3,7 +3,6 @@
 class Wine {
 
   static all = []
-  static editedWineId = null;
 
   constructor(id, name, vintage, varietals) {
     this.id = id;
@@ -18,6 +17,7 @@ class Wine {
     
     const div1 = document.createElement('div');
     const div2 = document.createElement('div');
+    div2.setAttribute('wine-id', `${this.id}`)
     let h4 = document.createElement('h4');
     let p1 = document.createElement('p');
     let p2 = document.createElement('p');
@@ -28,18 +28,20 @@ class Wine {
     deleteButton.id = this.id;
     deleteButton.setAttribute('class', 'btn');
     deleteButton.addEventListener('click', Wine.deleteWine);
+    
     const editButton = document.createElement('button');
-
-    // editButton.innerText = "Edit Wine";
-    // editButton.id = this.id;
-    // editButton.setAttribute('class', 'btn');
-    // editButton.addEventListener('click', Wine.editWine);
+    editButton.innerText = "Edit Wine";
+    editButton.id = this.id;
+    editButton.setAttribute('class', 'btn');
+    editButton.addEventListener('click', Wine.editWine);
 
     h4.innerText = this.name;
     p1.innerText = `vintage: ${this.vintage}`;
+    p1.setAttribute('id', 'vintage')
     this.varietals.forEach(varietal => {
-      p2.innerHTML += `varietal: ${varietal.name}<br>`;
+      p2.innerHTML += `varietal: ${varietal.name}`;
     })
+    p2.setAttribute('id', 'varietal')
 
     // this.varietals.forEach(varietal => return `${varietal.name}`)
     // p2.innerText = `varietals: ${this.varietals}`;
@@ -75,6 +77,7 @@ class Wine {
     div2.appendChild(p2);
     div2.appendChild(i);
     div2.appendChild(deleteButton);
+    div2.appendChild(editButton);
     
   
     div1.setAttribute('class', 'row');
@@ -87,10 +90,10 @@ class Wine {
   static createFromForm(e) {
     e.preventDefault();
 
-    // if (editing) {
-    //   updateBlog();
-    // }
-    // else {
+    if (editing) {
+      updateWine();
+    }
+    else {
     const strongWineParams = {
       wine: {
         name: wineName().value, 
@@ -98,7 +101,6 @@ class Wine {
         varietal_ids: [varietalDropDown().value]
       }
     }
-    
     fetch(baseUrl + '/wines.json', {
       method: "post",
       headers: {
@@ -113,6 +115,7 @@ class Wine {
       wine.display();
     })
     resetInputs();
+  }
     // form().classList.add("hidden")
     // revealWineFormButton().innerText = "ADD NEW WINE"
     // }
@@ -130,28 +133,72 @@ class Wine {
     return wine;
   }
 
-
+  
   static displayWines(){
     wineList().innerHTML = '';
     Wine.all.forEach(wine => wine.display())
   }
+  
+  // static findById(id) {
+    //   return this.all.find(wine => wine.id == id)
+    // }
+    
+    static editWine(e) {
+      editing = true;
+      
+      // debugger;
+      
+      wineName().value = this.parentNode.querySelector('h4').innerText;
+      wineVintage().value  = this.parentNode.querySelector('p#vintage').innerText.split(": ")[1];
+      varietalDropDown().value = Varietal.findByName(this.parentNode.querySelector('p#varietal').innerText.split(": ")[1]).id;
+      submitButton().value = "Update Wine"
+      
+      editedWineId = this.id;
+      
+    }
 
-  static findById(id) {
-    return this.all.find(wine => wine.id == id)
-  }
+    static updateWine(e){
+      e.preventDefault;
 
-  static editWine(e) {
-    editing = true;
+      const strongWineParams = {
+        wine: {
+          name: wineName().value, 
+          vintage: wineVintage().value,
+          varietal_ids: [varietalDropDown().value]
+        }
+      }
+      fetch(baseUrl + '/wines/' + editedWineId, {
+          method: "PATCH",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+            },
+          body: JSON.stringify(strongWineParams)
+      })
+      .then(resp => resp.json())
+      .then(data => {
+        // const div = document.querySelector('div')
+  
+        // div.querySelector('h4').innerText = data.name;
+        // div.querySelector('p#vintage').innerText = data.vintage;
+  
+        resetInputs();
+        editing = false;
+        editedWineId = null;
+        submitButton().value = "Create Wine";
+      })
+    }
+    
 
-  }
-  static deleteWine(e) {
-    // debugger;
-    const deletedWineId = this.id 
-    const wineDiv = this.parentNode.parentNode 
 
-    fetch(baseUrl + '/wines/' + deletedWineId, {
-      method: "delete"
-    })
+    static deleteWine(e) {
+      // debugger;
+      const deletedWineId = this.id 
+      const wineDiv = this.parentNode.parentNode 
+      
+      fetch(baseUrl + '/wines/' + deletedWineId, {
+        method: "delete"
+      })
       .then(resp =>resp.json())
       .then(obj => {
         // debugger;
@@ -162,10 +209,10 @@ class Wine {
         Wine.all = Wine.all.filter(wine => wine.id !== deletedWineId);
         // Wine.displayWines();
       })
-      .catch(error => {
-        alert("Delete Failed. Check console for errors.");
-        console.log(error.message);
-    })
+    //   .catch(error => {
+    //     alert("Delete Failed. Check console for errors.");
+    //     console.log(error.message);
+    // })
     }
 
   }

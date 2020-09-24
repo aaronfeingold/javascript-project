@@ -18,7 +18,7 @@ class WinesController < ApplicationController
 
   # POST /wines
   def create
-    binding.pry
+    # binding.pry
     @wine = Wine.new(wine_params)
     # WineVarietal.create(wine_id: @wine.id, varietals_ids: wine_params[:varietals_ids] )
     # @wine.varietals << Varietal.find(wine_params[:varietals_attributes][])

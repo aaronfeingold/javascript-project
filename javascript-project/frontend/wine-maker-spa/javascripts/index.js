@@ -8,6 +8,11 @@ const form = () => document.getElementById('wine-maker-form')
 const wineName = () => document.querySelector('input#wine-name')
 const wineVintage = () => document.querySelector('input#wine-vintage')
 const varietalDropDown = () => document.querySelector('select#varietal-selector')
+const submitButton = () => document.getElementById('submit-wine')
+
+let editing = false;
+let editedWineId = null;
+
 // varietalDropDown.length = 0;
 
 // let defaultOption = document.createElement('option');

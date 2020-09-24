@@ -8,6 +8,10 @@ class Varietal {
       this.wine_id = wine_id;
     }
 
+    static findByName(name) {
+      return this.all.find(varietal => varietal.name == name)
+    }
+
 addToVarietalDropDown() {
   let varietalOption = document.createElement('option')
   varietalOption.setAttribute('value', `${this.id}`)
