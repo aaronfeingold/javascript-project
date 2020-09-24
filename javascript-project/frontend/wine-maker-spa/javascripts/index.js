@@ -13,18 +13,6 @@ const submitButton = () => document.getElementById('submit-wine')
 let editing = false;
 let editedWineId = null;
 
-// varietalDropDown.length = 0;
-
-// let defaultOption = document.createElement('option');
-// defaultOption.text = 'Choose Varietals'
-
-// varietalDropDown().add(defaultOption)
-// varietalDropDown.selectedIndex = 0;
-// document.addEventListener('DOMContentLoaded', function() {
-//   let elems = document.querySelectorAll('select');
-//   let instances = M.FormSelect.init(elems, options);
-// });
-
 const wines = []
 
 
@@ -33,23 +21,23 @@ document.addEventListener("DOMContentLoaded", callOnLoad)
 function callOnLoad() {
   loadWines();
   loadVarietals();
-  // revealWineFormButton().addEventListener('click', revealForm);
+  revealWineFormButton().addEventListener('click', revealForm);
   form().addEventListener('submit', Wine.createFromForm);
 };
 
 function loadWines() {
   fetch(baseUrl + '/wines')
-    .then(resp => {
-      if (resp.status !== 200) {
-        throw new Error(resp.statusText);
-      }
-      return resp.json()
-    })
-    .then(winesData => {
-      
-      Wine.createWines(winesData)
-      Wine.displayWines();
-    })
+  .then(resp => {
+    if (resp.status !== 200) {
+      throw new Error(resp.statusText);
+    }
+    return resp.json()
+  })
+  .then(winesData => {
+    
+    Wine.createWines(winesData)
+    Wine.displayWines();
+  })
 }
 function revealForm() {
   if (revealWineFormButton().innerText === "ADD NEW WINE") {
@@ -64,22 +52,32 @@ function revealForm() {
 
 function loadVarietals() {
   fetch(baseUrl + '/varietals')
-    .then(resp => {
-      if (resp.status !== 200) {
-        throw new Error(resp.statusText);
-      }
-      return resp.json()
-    })
-    .then(varietalsData => {
-      Varietal.createVarietals(varietalsData)
-      Varietal.displayVarietals();
-    })
+  .then(resp => {
+    if (resp.status !== 200) {
+      throw new Error(resp.statusText);
+    }
+    return resp.json()
+  })
+  .then(varietalsData => {
+    Varietal.createVarietals(varietalsData)
+    Varietal.displayVarietals();
+  })
 }
 
 
 function resetInputs() {
   wineName().value = "";
   wineVintage().value = "";
-  document.getElementById('varietal-selector').value = "";
+  varietalDropDown().value = "";
 }
 
+
+// let defaultOption = document.createElement('option');
+// defaultOption.text = 'Choose Varietals'
+
+// varietalDropDown().add(defaultOption)
+// varietalDropDown.selectedIndex = 0;
+// document.addEventListener('DOMContentLoaded', function() {
+//   let elems = document.querySelectorAll('select');
+//   let instances = M.FormSelect.init(elems, options);
+// });

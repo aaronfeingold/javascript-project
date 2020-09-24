@@ -11,8 +11,6 @@ class Wine {
     this.varietals = varietals;
   }
 
-  // .map(varietal =>  Varietal.create(varietal.id, varietal.name, varietal.wine_id))
-
   display() {
     
     const div1 = document.createElement('div');
@@ -37,31 +35,15 @@ class Wine {
 
     h4.innerText = this.name;
     p1.innerText = `vintage: ${this.vintage}`;
-    p1.setAttribute('id', 'vintage')
+    p1.setAttribute('id', 'vintage');
     this.varietals.forEach(varietal => {
       p2.innerHTML += `varietal: ${varietal.name}`;
-    })
-    p2.setAttribute('id', 'varietal')
-
-    // this.varietals.forEach(varietal => return `${varietal.name}`)
-    // p2.innerText = `varietals: ${this.varietals}`;
-    
-    // for (let i = 0; i < this.varietals.length; i++) {
-    //   varietals[i].name
-    // }
-    // let p2s = []
-    // this.varietals.forEach(varietal => {
-    //   let p2 = document.createElement('p');
-    //   p2.innerHTML = `varietal: ${varietal.name}`;
-    //   p2s << p2;
-    // })
-
-   
-    // this.varietals.forEach(varietal => document.createElement('p').innerHTML = `varietal: ${varietal.name}`);
+    });
+    p2.setAttribute('id', 'varietal');
   
-    i.setAttribute('class', 'material-icons')
-    i.setAttribute('id', 'unliked')
-    i.innerText = "mood"
+    i.setAttribute('class', 'material-icons');
+    i.setAttribute('id', 'unliked');
+    i.innerText = "mood";
     i.addEventListener('click', event => {
       if (event.target.id === 'unliked')
         i.setAttribute('id', 'liked')  
@@ -73,7 +55,6 @@ class Wine {
     div2.setAttribute('id', 'card');
     div2.appendChild(h4);
     div2.appendChild(p1);
-    // p2s.forEach(p2 => div2.appendChild(p2))
     div2.appendChild(p2);
     div2.appendChild(i);
     div2.appendChild(deleteButton);
@@ -84,16 +65,11 @@ class Wine {
     div1.appendChild(div2);
   
     wineList().appendChild(div1);
-  
+    
   }
-
-  static createFromForm(e) {
+  
+  static updateWine(e){
     e.preventDefault();
-
-    if (editing) {
-      updateWine();
-    }
-    else {
     const strongWineParams = {
       wine: {
         name: wineName().value, 
@@ -101,24 +77,84 @@ class Wine {
         varietal_ids: [varietalDropDown().value]
       }
     }
-    fetch(baseUrl + '/wines.json', {
-      method: "post",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(strongWineParams)
+
+    
+
+    fetch(baseUrl + '/wines/' + editedWineId, {
+        method: "PATCH",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+          },
+        body: JSON.stringify(strongWineParams)
     })
     .then(resp => resp.json())
-    .then(data => {
-      let wine = Wine.create(data.id, data.name, data.vintage, data.varietals);
-      wine.display();
-    })
-    resetInputs();
+    .then(function (data) {
+        console.log(data);
+        
+        let div = document.getElementById(editedWineId).parentNode
+        div.querySelector('h4').innerText = data.name;
+        div.querySelector('p#vintage').innerText = `vintage: ${data.vintage}`;
+        div.querySelector('p#varietal').innerHTML = ""
+        data.varietals.forEach(varietal => {
+          div.querySelector('p#varietal').innerHTML += `varietal: ${varietal.name}`;
+        });
+        resetInputs();
+        editing = false;
+        editedWineId = null;
+        submitButton().value = "Create Wine";
+      })
+      form().classList.add("hidden")
+      revealWineFormButton().innerText = "ADD NEW WINE"
   }
-    // form().classList.add("hidden")
-    // revealWineFormButton().innerText = "ADD NEW WINE"
-    // }
+
+  static editWine(e) {
+    editing = true;
+    form().classList.remove("hidden");
+    
+    wineName().value = this.parentNode.querySelector('h4').innerText;
+    wineVintage().value  = this.parentNode.querySelector('p#vintage').innerText.split(": ")[1];
+    varietalDropDown().value = Varietal.findByName(this.parentNode.querySelector('p#varietal').innerText.split(": ")[1]).id;
+    submitButton().value = "Update Wine"
+    
+    editedWineId = this.id;  
+    
+  }
+
+  static createFromForm(e) {
+    e.preventDefault();
+
+    if (editing) {
+      Wine.updateWine(e);
+    }
+    else {
+
+    const strongWineParams = {
+      wine: {
+        name: wineName().value, 
+        vintage: wineVintage().value,
+        varietal_ids: [varietalDropDown().value]
+      }
+    }
+
+      fetch(baseUrl + '/wines.json', {
+        method: "post",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(strongWineParams)
+      })
+        .then(resp => resp.json())
+        .then(data => {
+          let wine = Wine.create(data.id, data.name, data.vintage, data.varietals);
+          wine.display();
+        })
+      resetInputs();
+    }
+    form().classList.add("hidden")
+    revealWineFormButton().innerText = "ADD NEW WINE"
+    
   }
 
   static createWines(winesData){
@@ -139,69 +175,21 @@ class Wine {
     Wine.all.forEach(wine => wine.display())
   }
   
-  // static findById(id) {
-    //   return this.all.find(wine => wine.id == id)
-    // }
-    
-    static editWine(e) {
-      editing = true;
-      
-      // debugger;
-      
-      wineName().value = this.parentNode.querySelector('h4').innerText;
-      wineVintage().value  = this.parentNode.querySelector('p#vintage').innerText.split(": ")[1];
-      varietalDropDown().value = Varietal.findByName(this.parentNode.querySelector('p#varietal').innerText.split(": ")[1]).id;
-      submitButton().value = "Update Wine"
-      
-      editedWineId = this.id;
-      
-    }
-
-    static updateWine(e){
-      e.preventDefault;
-
-      const strongWineParams = {
-        wine: {
-          name: wineName().value, 
-          vintage: wineVintage().value,
-          varietal_ids: [varietalDropDown().value]
-        }
-      }
-      fetch(baseUrl + '/wines/' + editedWineId, {
-          method: "PATCH",
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-            },
-          body: JSON.stringify(strongWineParams)
-      })
-      .then(resp => resp.json())
-      .then(data => {
-        // const div = document.querySelector('div')
-  
-        // div.querySelector('h4').innerText = data.name;
-        // div.querySelector('p#vintage').innerText = data.vintage;
-  
-        resetInputs();
-        editing = false;
-        editedWineId = null;
-        submitButton().value = "Create Wine";
-      })
+  static findById(id) {
+      return this.all.find(wine => wine.id == id)
     }
     
-
-
-    static deleteWine(e) {
-      // debugger;
-      const deletedWineId = this.id 
-      const wineDiv = this.parentNode.parentNode 
+  static deleteWine(e) {
+      // 
+    const deletedWineId = this.id 
+    const wineDiv = this.parentNode.parentNode 
       
-      fetch(baseUrl + '/wines/' + deletedWineId, {
-        method: "delete"
-      })
+    fetch(baseUrl + '/wines/' + deletedWineId, {
+      method: "delete"
+    })
       .then(resp =>resp.json())
       .then(obj => {
-        // debugger;
+        // 
         console.log(obj);
         alert('wine was deleted');
          // FOR WINE DELETE
@@ -209,10 +197,7 @@ class Wine {
         Wine.all = Wine.all.filter(wine => wine.id !== deletedWineId);
         // Wine.displayWines();
       })
-    //   .catch(error => {
-    //     alert("Delete Failed. Check console for errors.");
-    //     console.log(error.message);
-    // })
+
     }
 
   }
