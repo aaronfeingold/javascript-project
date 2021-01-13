@@ -174,6 +174,11 @@ class Wine {
     wineList().innerHTML = '';
     Wine.all.forEach(wine => wine.display())
   }
+
+  static displayFilteredWines (winesData) {
+    wineList().innerHTML = '';
+    winesData.forEach(wine => wine.display())
+  }
   
   static findById(id) {
       return this.all.find(wine => wine.id == id)

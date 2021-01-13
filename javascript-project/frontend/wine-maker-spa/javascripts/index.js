@@ -23,7 +23,16 @@ function callOnLoad() {
   loadVarietals();
   revealWineFormButton().addEventListener('click', revealForm);
   form().addEventListener('submit', Wine.createFromForm);
+  const newButton = document.querySelector('#vintage-filter')
+  newButton.addEventListener('click', vintageFilter);
 };
+
+function vintageFilter() {
+  // debugger;
+  // return Wine.all.filter(wine => wine.vintage === 2011)
+  Wine.displayFilteredWines(Wine.all.filter(wine => wine.vintage === 2011));
+  }
+
 
 function loadWines() {
   fetch(baseUrl + '/wines')
